@@ -1,0 +1,19 @@
+ATAC
+CD8Tex		0
+Monocytes 	1
+NaiveCD4Tcells	2
+RestNK		3
+Tfh 		4
+MemoryBcells	5
+
+
+
+RNA
+CD8Tex		0 
+Monocytes 	1	
+NaiveCD4Tcells	2
+RestNK		3
+CD8Tcells		6
+RestMemCD4Tcells	7
+RestpDCs		8
+NaiveBcells	9
