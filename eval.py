@@ -1,5 +1,6 @@
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
+import torch
 import random
 
 def calc_frac_idx(x1_mat,x2_mat):
@@ -24,6 +25,7 @@ def calc_frac_idx(x1_mat,x2_mat):
 
 def calc_domainAveraged_FOSCTTM(x1_mat, x2_mat):
     """
+    Metric from SCOT: "FOSCTTM"
     Outputs average FOSCTTM measure (averaged over both domains)
     Get the fraction matched for all data points in both directions
     Averages the fractions in both directions for each data point
@@ -36,7 +38,7 @@ def calc_domainAveraged_FOSCTTM(x1_mat, x2_mat):
     return fracs
     
 
-def test_transfer_accuracy(data1, data2, type1, type2):
+def transfer_accuracy(data1, data2, type1, type2):
     """
     Metric from UnionCom: "Label Transfer Accuracy"
     """
@@ -53,7 +55,8 @@ def test_transfer_accuracy(data1, data2, type1, type2):
             count += 1
     return count / len(type1)
 
-def test_alignment_score(data1_shared, data2_shared, data1_specific=None, data2_specific=None):
+
+def alignment_score(data1_shared, data2_shared, data1_specific=None, data2_specific=None):
 
     N = 2
 
@@ -66,7 +69,7 @@ def test_alignment_score(data1_shared, data2_shared, data1_specific=None, data2_
     data2 = data2[random.sample(range(len(data2)), len(data1))]
     k = np.maximum(10, (len(data1) + len(data2))*0.01)
     k = k.astype(np.int)
-    
+
     data = np.vstack((data1, data2))
 
     bar_x1 = 0

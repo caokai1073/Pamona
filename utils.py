@@ -159,8 +159,8 @@ def Interval_Estimation(Gc, interval_num=20):
     for i in range(interval_num):
         plt.plot(a[i], count[i], 's', color='k')
 
-    plt.xticks(fontproperties = 'Times New Roman', size = 18)
-    plt.yticks(fontproperties = 'Times New Roman', size = 18)
+    plt.xticks(fontproperties = 'Arial', size = 18)
+    plt.yticks(fontproperties = 'Arial', size = 18)
     plt.xlabel('interval', font_label)
     plt.ylabel('number', font_label)
 
