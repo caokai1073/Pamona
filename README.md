@@ -14,6 +14,12 @@ scipy 1.4.1
 matplotlib 3.3.1
 POT 0.7.0
 
+## Install
+Pamona software is available on the Python package index (PyPI), latest version 0.0.1. To install it using pip, simply type:
+```
+pip3 install Pamona
+```
+
 ## Integrate data
 Each row should contain the measured values for a single cell, and each column should contain the values of a feature across cells. 
 ```data_0.txt, ... , data_N.txt``` to be integrated, use
