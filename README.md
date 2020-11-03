@@ -1,7 +1,7 @@
-# UnionCom
+# Pamona
 
 ## Paper
-[Unsupervised Topological Alignment for Single-Cell Multi-Omics Integration]
+Manifold alignment for  heterogeneous single-cell multi-omics data integration using Pamona
 ## Enviroment
 
 python >= 3.6
@@ -13,25 +13,6 @@ Cython 0.29.21
 scipy 1.4.1
 matplotlib 3.3.1
 POT 0.7.0
-
-## Install
-Pamona software is available on the Python package index (PyPI), latest version 0.0.1. To install it using pip, simply type:
-```
-pip3 install Pamona
-```
-
-## Examples (jupyter notebook)
-
-+ [Integration of simulations in UnionCom paper](https://github.com/caokai1073/UnionCom/blob/master/Examples/Simulation_example.ipynb)
-
-+ [Integration of simulations in MMD-MA paper](https://github.com/caokai1073/UnionCom/blob/master/Examples/Simulation_data_from_MMD-MA.ipynb)
-
-+ [Batch correction](https://github.com/caokai1073/UnionCom/blob/master/Examples/Batch_correction_example.ipynb)
-
-+ [Integration of multi-omics data](https://github.com/caokai1073/UnionCom/blob/master/Examples/scGEM_and_scNMT_example.ipynb)
-
-+ [Integration of datasets with specific cells](https://github.com/caokai1073/UnionCom/blob/master/Examples/dataset-specific_example.ipynb)
-
 
 ## Integrate data
 Each row should contain the measured values for a single cell, and each column should contain the values of a feature across cells.
