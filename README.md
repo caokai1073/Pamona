@@ -39,25 +39,25 @@ aligned_data_N = integrated_data[N]
 ## Parameters of ```run_Pamona```
 
 The list of parameters is given below:
-+ **data**:  *list of numpy array, [dataset1, dataset2, ...] (n_datasets, n_samples, n_features)*
++ **data**:  *list of numpy array, [dataset1, dataset2, ...] (n_datasets, n_samples, n_features).*
 list of datasets to be integrated, in the form of a numpy array.
 
-+ **n_shared**: *int, default as the cell number of the smallest dataset*
++ **n_shared**: *int, default as the cell number of the smallest dataset.*
 shared cell number between datasets.
 
-+ **epsilon**: *float, default as 0.001*
++ **epsilon**: *float, default as 0.001.*
 the regularization parameter of the partial-GW framework.
 
-+ **n_neighbors**: *int, default as 10*
++ **n_neighbors**: *int, default as 10.*
 the number of neighborhoods  of the k-nn graph.
 
-+ **Lambda**: *float, default as 1.0*
++ **Lambda**: *float, default as 1.0.*
 the parameter of manifold alignment to make a trade-off between aligning corresponding cells and preserving the local geometries
 
-+ **output_dim**: *int, default as 30*
++ **output_dim**: *int, default as 30.*
 output dimension of the common embedding space after the manifold alignment
 
-+ **M**: *numpy array , default as None (optionally)*
++ **M**: *numpy array , default as None (optionally)*.
 disagreement matrix of prior  information.
 
 The other parameters include:
