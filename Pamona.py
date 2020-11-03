@@ -136,29 +136,29 @@ def alignment_score(data1_shared, data2_shared, data1_specific=None, data2_speci
 	print("alignment score:")
 	print(alignment_sco)
 
-
-data1 = np.loadtxt("./MMD/s1_mapped1.txt")
-data2 = np.loadtxt("./MMD/s1_mapped2.txt")
-type1 = np.loadtxt("./MMD/s1_type1.txt")
-type2 = np.loadtxt("./MMD/s1_type2.txt")
-index1 = np.argwhere(type1==0).reshape(1,-1).flatten()    
-index2 = np.argwhere(type1==2).reshape(1,-1).flatten()
-index3 = np.argwhere(type1==1).reshape(1,-1).flatten()
-index = np.hstack((index1, index2))
-print(len(index))
-index = np.hstack((index, index3))
-type1 = type1[index]
-data1 = data1[index]
-index1 = np.argwhere(type2==0).reshape(1,-1).flatten()
-index2 = np.argwhere(type2==2).reshape(1,-1).flatten()
-index = np.hstack((index1, index2))
-type2 = type2[index]
-data2 = data2[index]
-type1 = type1.astype(np.int)
-type2 = type2.astype(np.int)
-data = [data1,data2]
-datatype = [type1,type2]
-integrated_data, T = run_Pamona(data, epsilon=0.001, n_neighbors=10, Lambda=1, output_dim=30)
-label_transfer_accuracy(integrated_data[0][0:241],integrated_data[1],type1[0:241],type2)
-alignment_score(integrated_data[0][0:241], integrated_data[1], data1_specific=integrated_data[0][241:300])
-Visualize([data1,data2], integrated_data, datatype=datatype, mode='UMAP')
+### example
+# data1 = np.loadtxt("./MMD/s1_mapped1.txt")
+# data2 = np.loadtxt("./MMD/s1_mapped2.txt")
+# type1 = np.loadtxt("./MMD/s1_type1.txt")
+# type2 = np.loadtxt("./MMD/s1_type2.txt")
+# index1 = np.argwhere(type1==0).reshape(1,-1).flatten()    
+# index2 = np.argwhere(type1==2).reshape(1,-1).flatten()
+# index3 = np.argwhere(type1==1).reshape(1,-1).flatten()
+# index = np.hstack((index1, index2))
+# print(len(index))
+# index = np.hstack((index, index3))
+# type1 = type1[index]
+# data1 = data1[index]
+# index1 = np.argwhere(type2==0).reshape(1,-1).flatten()
+# index2 = np.argwhere(type2==2).reshape(1,-1).flatten()
+# index = np.hstack((index1, index2))
+# type2 = type2[index]
+# data2 = data2[index]
+# type1 = type1.astype(np.int)
+# type2 = type2.astype(np.int)
+# data = [data1,data2]
+# datatype = [type1,type2]
+# integrated_data, T = run_Pamona(data, epsilon=0.001, n_neighbors=10, Lambda=1, output_dim=30)
+# label_transfer_accuracy(integrated_data[0][0:241],integrated_data[1],type1[0:241],type2)
+# alignment_score(integrated_data[0][0:241], integrated_data[1], data1_specific=integrated_data[0][241:300])
+# Visualize([data1,data2], integrated_data, datatype=datatype, mode='UMAP')
