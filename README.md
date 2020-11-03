@@ -75,6 +75,7 @@ type_0 = type_0.astype(np.int)
 ...
 type_N = type_N.astype(np.int)
 Pamona.Visualize([data_0, ..., data_N], integrated_data, mode='PCA') # without datatype
-Pamona.Visualize([data_0, ..., data_N], integrated_data, [type_0,...,type_N], mode='PCA) # with datatype, mode: ["PCA", "TSNE", "UMAP"], default as "PCA", 
+Pamona.Visualize([data_0, ..., data_N], integrated_data, [type_0,...,type_N], mode='PCA) # with datatype
+# mode: ["PCA", "TSNE", "UMAP"], default as "PCA"
 ```
 
