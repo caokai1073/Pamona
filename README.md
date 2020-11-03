@@ -48,7 +48,7 @@ shared cell number between datasets.
 + **epsilon**: *float, default as 0.001.*
 the regularization parameter of the partial-GW framework.
 
-+ **n_neighbors**: *int, default as 10.*
++ **n_neighbors**: *int, default as 30.*
 the number of neighborhoods  of the k-nn graph.
 
 + **Lambda**: *float, default as 1.0.*
