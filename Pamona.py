@@ -1,3 +1,8 @@
+'''
+author: Kai Cao
+email: caokai@amss.ac.cn
+'''
+
 import time
 import numpy as np
 import random
