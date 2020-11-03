@@ -17,7 +17,7 @@ POT 0.7.0
 ## Install
 Pamona software is available on the Python package index (PyPI), latest version 0.0.1. To install it using pip, simply type:
 ```
-pip3 install Pamona
+pip3 install pamona
 ```
 
 ## Integrate data
@@ -25,12 +25,12 @@ Each row should contain the measured values for a single cell, and each column s
 ```data_0.txt, ... , data_N.txt``` to be integrated, use
 
 ```python
-from Pamona import run_Pamona
+from pamona import Pamona
 import numpy as np
 data_0 = np.loadtxt("data_0.txt")
 ...
 data_N = np.loadtxt("data_N.txt")
-integrated_data, T = run_Pamona([data_0, ..., data_N])
+integrated_data, T = Pamona.run_Pamona([data_0, ..., data_N])
 aligned_data_0 = integrated_data[0]
 ...
 aligned_data_N = integrated_data[N]
