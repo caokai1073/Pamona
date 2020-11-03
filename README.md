@@ -67,7 +67,7 @@ The other parameters include:
 > + ```tol```:  *float*, the precision condition under which the iteration of the partial-GW framework stops, default as 1e-9.
 > + ```manual_seed```: *int*, random seed, default as 666.
 > + ```mode```: *{‘connectivity’, ‘distance’}*, type of returned matrix: ‘connectivity’ will return the connectivity matrix with ones and zeros, and ‘distance’ will return the distances between neighbors according to the given metric. has to be either one of 'connectivity' or 'distance', default as 'distance'.
-> + ```metric```: *str*, the distance metric used to calculate the k-Neighbors for each sample point, default=’minkowski’.
+> + ```metric```: *str*, the distance metric used to calculate the k-Neighbors for each sample point, default as ’minkowski’.
 
 ## Visualization
 ```python
@@ -75,6 +75,6 @@ type_0 = type_0.astype(np.int)
 ...
 type_N = type_N.astype(np.int)
 Pamona.Visualize([data_0, ..., data_N], integrated_data, mode='PCA') # without datatype
-Pamona.Visualize([data_0, ..., data_N], integrated_data, [type_0,...,type_N], mode='PCA) # with datatype
+Pamona.Visualize([data_0, ..., data_N], integrated_data, [type_0,...,type_N], mode='PCA) # with datatype, mode: ["PCA", "TSNE", "UMAP"], default as "PCA", 
 ```
 
