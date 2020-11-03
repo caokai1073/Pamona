@@ -58,7 +58,7 @@ the parameter of manifold alignment to make a trade-off between aligning corresp
 output dimension of the common embedding space after the manifold alignment
 
 + **M**: *numpy array , default as None (optionally)*
-matrix about prior  information.
+disagreement matrix of prior  information.
 
 The other parameters include:
 
