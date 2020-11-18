@@ -6,13 +6,13 @@ Manifold alignment for  heterogeneous single-cell multi-omics data integration u
 
 python >= 3.6
 
-numpy 1.18.5  
-scikit-learn 0.23.2  
-umap-learn 0.3.10  
-Cython 0.29.21  
-scipy 1.4.1  
-matplotlib 3.3.1  
-POT 0.7.0  
+numpy >= 1.18.5  
+scikit-learn >= 0.23.2  
+umap-learn >= 0.3.10  
+Cython >= 0.29.21  
+scipy >= 1.4.1  
+matplotlib >= 3.3.1  
+POT >= 0.7.0  
 
 ## Install
 Pamona software is available on the Python package index (PyPI), latest version 0.0.1. To install it using pip, simply type:
