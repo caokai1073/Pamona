@@ -1,7 +1,7 @@
 # Pamona
 
 ## Paper
-Manifold alignment for  heterogeneous single-cell multi-omics data integration using Pamona
+[Manifold alignment for  heterogeneous single-cell multi-omics data integration using Pamona](https://doi.org/10.1101/2020.11.03.366146)
 ## Enviroment
 
 python >= 3.6
