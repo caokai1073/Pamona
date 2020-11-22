@@ -80,3 +80,4 @@ Pamona.Visualize([data_0, ..., data_N], integrated_data, [type_0,...,type_N], mo
 # mode: ["PCA", "TSNE", "UMAP"], default as "PCA"
 ```
 
+## Contact via caokai@amss.ac.cn
