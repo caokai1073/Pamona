@@ -29,9 +29,10 @@ from pamona import Pamona
 import numpy as np
 data1 = np.loadtxt("data1.txt")
 data2 = np.loadtxt("data2.txt")
-integrated_data, T = Pamona.run_Pamona([dat1, data2], n_shared=[n])
-# if prior disagreement matrix **M** available
-# integrated_data, T = Pamona.run_Pamona([dat1, data2], n_shared=[n], M=M)
+data3 = np.loadtxt("data3.txt")
+integrated_data, T = Pamona.run_Pamona([data1,data2,data3], n_shared=[n1,n2])
+# if prior disagreement matrix M1,M2 available
+# integrated_data, T = Pamona.run_Pamona([data1,data2,data3], n_shared=[n1,n2], M=[M1,M2])
 aligned_data1 = integrated_data[0]
 aligned_data2 = integrated_data[1]
 ```
