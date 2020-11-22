@@ -30,6 +30,8 @@ import numpy as np
 data1 = np.loadtxt("data1.txt")
 data2 = np.loadtxt("data2.txt")
 integrated_data, T = Pamona.run_Pamona([dat1, data2], n_shared=[n])
+# if prior disagreement matrix **M** available
+# integrated_data, T = Pamona.run_Pamona([dat1, data2], n_shared=[n], M=M)
 aligned_data_0 = integrated_data[0]
 ...
 aligned_data_N = integrated_data[N]
