@@ -27,10 +27,9 @@ Each row should contain the measured values for a single cell, and each column s
 ```python
 from pamona import Pamona
 import numpy as np
-data_0 = np.loadtxt("data_0.txt")
-...
-data_N = np.loadtxt("data_N.txt")
-integrated_data, T = Pamona.run_Pamona([data_0, ..., data_N])
+data1 = np.loadtxt("data1.txt")
+data2 = np.loadtxt("data2.txt")
+integrated_data, T = Pamona.run_Pamona([dat1, data2], n_shared=[n])
 aligned_data_0 = integrated_data[0]
 ...
 aligned_data_N = integrated_data[N]
