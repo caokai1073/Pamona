@@ -1,7 +1,6 @@
 """
-Author: Pinar Demetci, Rebecca Santorella
-12 February 2020
-Utils for SCOT
+Author: Kai Cao
+Utils for Pamona
 """
 import numpy as np
 import scipy.sparse as sp 
