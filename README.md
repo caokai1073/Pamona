@@ -2,6 +2,9 @@
 
 ## Paper
 [Manifold alignment for  heterogeneous single-cell multi-omics data integration using Pamona](https://doi.org/10.1101/2020.11.03.366146)
+
+The implementation is based on [UnionCom](https://github.com/caokai1073/unionCom) and [SCOT](https://github.com/rsinghlab/SCOT).
+
 ## Enviroment
 
 python >= 3.6
