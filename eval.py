@@ -38,7 +38,7 @@ def calc_domainAveraged_FOSCTTM(x1_mat, x2_mat):
     return fracs
     
 
-def transfer_accuracy(data1, data2, type1, type2):
+def test_transfer_accuracy(data1, data2, type1, type2):
     """
     Metric from UnionCom: "Label Transfer Accuracy"
     """
@@ -56,7 +56,7 @@ def transfer_accuracy(data1, data2, type1, type2):
     return count / len(type1)
 
 
-def alignment_score(data1_shared, data2_shared, data1_specific=None, data2_specific=None):
+def test_alignment_score(data1_shared, data2_shared, data1_specific=None, data2_specific=None):
 
     N = 2
 
