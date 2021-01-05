@@ -41,6 +41,16 @@ Each row should contain the measured values for a single cell, and each column s
 >>> Pa.Visualize([data1,data2], integrated_data, mode='PCA')  # without datatype, mode: ["PCA", "TSNE", "UMAP"], default as "PCA".
 >>> Pa.Visualize([data1,data2], integrated_data, [type1,type2], mode='PCA')  # with datatype 
 ```
+## Example of design disagreement matrix of prior information
+If cell types are available, users can incorporate the information as
+```python
+gamma = 0.5 # gamma is a parameter. A larger value gives more importance to the matching of prior information.
+M = np.ones((len(data1), len(data2)))
+for i in range(len(data1)):
+    for j in range(len(data2)):
+        if type1[i] == type2[j]:
+            M[i][j] = gamma
+```
 
 ## Parameters of ```class Pamona```
 
@@ -55,7 +65,7 @@ shared cell number between datasets.
 the regularization parameter of the partial-GW framework.
 
 + **n_neighbors**: *int, default as 30.*
-the number of neighborhoods  of the k-nn graph.
+the number of neighborhoods of the k-nn graph.
 
 + **Lambda**: *float, default as 1.0.*
 the parameter of manifold alignment to make a trade-off between aligning corresponding cells and preserving the local geometries
@@ -64,7 +74,7 @@ the parameter of manifold alignment to make a trade-off between aligning corresp
 output dimension of the common embedding space after the manifold alignment
 
 + **M**: *numpy array , default as None (optionally)*.
-disagreement matrix of prior  information.
+disagreement matrix of prior information.
 
 The other parameters include:
 
