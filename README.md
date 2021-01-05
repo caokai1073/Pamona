@@ -55,6 +55,16 @@ If cell types are available, users can incorporate the information as follows
 >>> ...
 >>> Pa = Pamona.Pamona(..., M=DM, ...)
 ```
+## Examples on simualtions and real data sets (jupyter notebook)
++ [Integration of Simulation 1 in Pamona paper](https://github.com/caokai1073/Pamona/blob/master/example/Simulation1.ipynb)
+
++ [Integration of Simulation 2 in Pamona paper](https://github.com/caokai1073/Pamona/blob/master/example/Simulation2.ipynb)
+
++ [Integration of scGEM data](https://github.com/caokai1073/Pamona/blob/master/example/scGEM.ipynb)
+
++ [Integration of three datasets of scNMT data](https://github.com/caokai1073/Pamona/blob/master/example/scNMT-three-datasets.ipynb)
+
++ [Integration of PBMC data with cell types as prior information](https://github.com/caokai1073/Pamona/blob/master/example/PBMC.ipynb)
 
 ## Parameters of ```class Pamona```
 
