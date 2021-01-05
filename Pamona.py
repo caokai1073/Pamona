@@ -157,7 +157,6 @@ class Pamona(object):
 
 		return integrated_data, self.T
 
-
 	def entropic_gromov_wasserstein(self, C1, C2, p, q, m, M=None, loss_fun='square_loss'):
 
 		C1 = np.asarray(C1, dtype=np.float32)
@@ -206,7 +205,6 @@ class Pamona(object):
 						print('{:5s}|{:12s}'.format(
 							'Epoch.', 'Loss') + '\n' + '-' * 19)
 					print('{:5d}|{:8e}|'.format(cpt, err))
-
 			cpt += 1
 	
 		return T
