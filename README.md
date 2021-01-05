@@ -42,14 +42,15 @@ Each row should contain the measured values for a single cell, and each column s
 >>> Pa.Visualize([data1,data2], integrated_data, [type1,type2], mode='PCA')  # with datatype 
 ```
 ## Example of design disagreement matrix of prior information
-If cell types are available, users can incorporate the information as
+If cell types are available, users can incorporate the information as follows
 ```python
 >>> gamma = 0.5 # gamma is a parameter. A larger value gives more importance to the matching of prior information.
->>> M = np.ones((len(data1), len(data2)))
+>>> DM = np.ones((len(data1), len(data2)))
 >>> for i in range(len(data1)):
 >>>    for j in range(len(data2)):
 >>>        if type1[i] == type2[j]:
->>>            M[i][j] = gamma
+>>>            DM[i][j] = gamma
+>>> Pa = Pamona.Pamona(M=DM)
 ```
 
 ## Parameters of ```class Pamona```
