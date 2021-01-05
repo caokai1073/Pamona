@@ -44,12 +44,12 @@ Each row should contain the measured values for a single cell, and each column s
 ## Example of design disagreement matrix of prior information
 If cell types are available, users can incorporate the information as
 ```python
-gamma = 0.5 # gamma is a parameter. A larger value gives more importance to the matching of prior information.
-M = np.ones((len(data1), len(data2)))
-for i in range(len(data1)):
-    for j in range(len(data2)):
-        if type1[i] == type2[j]:
-            M[i][j] = gamma
+>>> gamma = 0.5 # gamma is a parameter. A larger value gives more importance to the matching of prior information.
+>>> M = np.ones((len(data1), len(data2)))
+>>> for i in range(len(data1)):
+>>>    for j in range(len(data2)):
+>>>        if type1[i] == type2[j]:
+>>>            M[i][j] = gamma
 ```
 
 ## Parameters of ```class Pamona```
