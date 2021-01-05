@@ -10,160 +10,300 @@ import ot
 from ot.bregman import sinkhorn
 from ot.gromov import init_matrix, gwggrad
 from ot.partial import gwgrad_partial
+from numpy import linalg as la
+from sklearn.neighbors import kneighbors_graph
+from scipy.linalg import block_diag
 
 from eval import *
 from utils import *
 from visualization import visualize
-from project import project_func
 
-def entropic_gromov_wasserstein(C1, C2, p, q, m, M=None, epsilon=0.001, loss_fun='square_loss',
-                                 virtual_cells=1, max_iter=1000, tol=1e-9, verbose=True):
+class Pamona(object):
+
+	"""
+	Pamona software for single-cell mulit-omics data integration
+	Preprint at https://doi.org/10.1101/2020.11.03.366146
+
+	=============================
+			parameters:
+	=============================
+	dataset: list of numpy array, [dataset1, dataset2, ...] (n_datasets, n_samples, n_features). 
+	--list of datasets to be integrated, in the form of a numpy array.
+
+	n_shared: int, default as the cell number of the smallest dataset. 
+	--shared cell number between datasets.
+
+	epsilon: float, default as 0.001. 
+	--the regularization parameter of the partial-GW framework.
+
+	n_neighbors: int, default as 10. 
+	--the number of neighborhoods of the k-nn graph.
+
+	Lambda: float, default as 1.0. 
+	--the parameter to make a trade-off between aligning corresponding cells and preserving the local geometries
+
+	output_dim: int, default as 30. 
+	--output dimension of the common embedding space after the manifold alignment
+
+	M (optionally): numpy array , default as None. 
+	--disagreement matrix of prior information.
+	
+	=============================
+			Functions:
+	=============================
+	run_Pamona(dataset) 				
+	--find correspondence between datasets, align multi-omics data in a common embedded space
+
+	entropic_gromov_wasserstein(self, C1, C2, p, q, m, M, loss_fun)			
+	--find correspondence between datasets using partial GW
+
+	project_func(self, data)	
+	--project multi-omics data into a common embedded space
+
+	Visualize(data, integrated_data, datatype, mode)	
+	--Visualization
+	
+	test_labelTA(data1, data2, type1, type2) 		
+	test label transfer accuracy
+
+	alignment_score(data1_shared, data2_shared, data1_specific=None, data2_specific=None) 		
+	test alignment score
+
+	=============================
+			Examples:
+	=============================
+	input: numpy arrays with rows corresponding to samples and columns corresponding to features
+	output: integrated numpy arrays
+	>>> from pamona import Pamona
+	>>> import numpy as np
+	>>> data1 = np.loadtxt("./scGEM/expression.txt")
+	>>> data2 = np.loadtxt("./scGEM/methylation.txt")
+	>>> type1 = np.loadtxt("./simu1/expression_type.txt")
+	>>> type2 = np.loadtxt("./simu1/methylation_type.txt")
+	>>> type1 = type1.astype(np.int)
+	>>> type2 = type2.astype(np.int)
+	>>> uc = Pamona.Pamona()
+	>>> integrated_data = uc.fit_transform(dataset=[data1,data2])
+	>>> uc.test_labelTA(integrated_data[0], integrated_data[1], type1, type2)
+	>>> uc.Visualize([data1,data2], integrated_data, [type1,type2], mode='PCA')
+	===============================
+	"""
+
+	def __init__(self, n_shared=None, M=None, n_neighbors=10, epsilon=0.001, Lambda=1.0, virtual_cells=1, \
+		output_dim=30, max_iter=1000, tol=1e-9, manual_seed=666, mode="distance", metric="minkowski", verbose=True):
+
+		self.n_shared = n_shared
+		self.M = M
+		self.n_neighbors = n_neighbors
+		self.epsilon = epsilon
+		self.Lambda = Lambda
+		self.virtual_cells = virtual_cells
+		self.output_dim = output_dim
+		self.max_iter = max_iter
+		self.tol = tol
+		self.manual_seed = manual_seed
+		self.mode = mode
+		self.metric = metric
+		self.verbose = verbose
+		self.dist = []
+		self.Gc = []
+		self.T = []
+
+	def run_Pamona(self, data):
+
+		print("Pamona start!")
+		time1 = time.time()
+
+		init_random_seed(666)
+
+		sampleNo = []
+		Max = []
+		Min = []
+		p = []
+		q = []
+		n_datasets = len(data)
+
+		for i in range(n_datasets):
+			sampleNo.append(np.shape(data[i])[0])
+			self.dist.append(Pamona_geodesic_distances(data[i], self.n_neighbors, mode=self.mode, metric=self.metric))
+
+		for i in range(n_datasets-1):
+			Max.append(np.maximum(sampleNo[i], sampleNo[-1])) 
+			Min.append(np.minimum(sampleNo[i], sampleNo[-1]))
+
+		if self.n_shared is None:
+			self.n_shared = Min
+
+		for i in range(n_datasets-1):
+			if self.n_shared[i] > Min[i]:
+				self.n_shared[i] = Min[i]
+			p.append(ot.unif(Max[i])[0:len(data[i])])
+			q.append(ot.unif(Max[i])[0:len(data[-1])])
+
+		for i in range(n_datasets-1):
+			if self.M is not None:
+				T_tmp = self.entropic_gromov_wasserstein(self.dist[i], self.dist[-1], p[i], q[i], \
+					self.n_shared[i]/Max[i]-1e-15, self.M[i])
+			else:
+				T_tmp = self.entropic_gromov_wasserstein(self.dist[i], self.dist[-1], p[i], q[i], \
+				self.n_shared[i]/Max[i]-1e-15)
+			self.T.append(T_tmp) 
+			self.Gc.append(T_tmp[:len(p[i]), :len(q[i])])
+
+		integrated_data = self.project_func(data)
+
+		time2 = time.time()
+		print("Pamona Done! takes {:f}".format(time2-time1), 'seconds')
+
+		return integrated_data, self.T
 
 
-    C1 = np.asarray(C1, dtype=np.float32)
-    C2 = np.asarray(C2, dtype=np.float32)
+	def entropic_gromov_wasserstein(self, C1, C2, p, q, m, M=None, loss_fun='square_loss'):
 
-    G0 = np.outer(p, q)  # Initialization
+		C1 = np.asarray(C1, dtype=np.float32)
+		C2 = np.asarray(C2, dtype=np.float32)
 
-    dim_G_extended = (len(p) + virtual_cells, len(q) + virtual_cells)
-    q_extended = np.append(q, [(np.sum(p) - m) / virtual_cells] * virtual_cells)
-    p_extended = np.append(p, [(np.sum(q) - m) / virtual_cells] * virtual_cells)
+		T0 = np.outer(p, q)  # Initialization
 
-    q_extended = q_extended/np.sum(q_extended)
-    p_extended = p_extended/np.sum(p_extended)
+		dim_G_extended = (len(p) + self.virtual_cells, len(q) + self.virtual_cells)
+		q_extended = np.append(q, [(np.sum(p) - m) / self.virtual_cells] * self.virtual_cells)
+		p_extended = np.append(p, [(np.sum(q) - m) / self.virtual_cells] * self.virtual_cells)
 
-    constC, hC1, hC2 = init_matrix(C1, C2, p, q, loss_fun)
+		q_extended = q_extended/np.sum(q_extended)
+		p_extended = p_extended/np.sum(p_extended)
 
-    cpt = 0
-    err = 1
+		constC, hC1, hC2 = init_matrix(C1, C2, p, q, loss_fun)
 
-    while (err > tol and cpt < max_iter):
+		cpt = 0
+		err = 1
 
-        Gprev = G0
+		while (err > self.tol and cpt < self.max_iter):
 
-        # compute the gradient
-        if abs(m-1)<1e-10: # full match
-            Ck = gwggrad(constC, hC1, hC2, G0)
-        else: # partial match
-            Ck = gwgrad_partial(C1, C2, G0)
-       
-        if M is not None:
-            Ck = Ck*M
+			Gprev = T0
+			# compute the gradient
+			if abs(m-1)<1e-10: # full match
+				Ck = gwggrad(constC, hC1, hC2, T0)
+			else: # partial match
+				Ck = gwgrad_partial(C1, C2, T0)
+		
+			if M is not None:
+				Ck = Ck*M
 
-        Ck_emd = np.zeros(dim_G_extended)
-        Ck_emd[:len(p), :len(q)] = Ck
-        Ck_emd[-virtual_cells:, -virtual_cells:] = 100*np.max(Ck_emd)
-        Ck_emd = np.asarray(Ck_emd, dtype=np.float64)
+			Ck_emd = np.zeros(dim_G_extended)
+			Ck_emd[:len(p), :len(q)] = Ck
+			Ck_emd[-self.virtual_cells:, -self.virtual_cells:] = 100*np.max(Ck_emd)
+			Ck_emd = np.asarray(Ck_emd, dtype=np.float64)
 
-        # Gc = sinkhorn(p, q, Ck, epsilon, method = 'sinkhorn')
-        Gc = sinkhorn(p_extended, q_extended, Ck_emd, epsilon, method = 'sinkhorn')
-        G0 = Gc[:len(p), :len(q)]
+			# T = sinkhorn(p, q, Ck, epsilon, method = 'sinkhorn')
+			T = sinkhorn(p_extended, q_extended, Ck_emd, self.epsilon, method = 'sinkhorn')
+			T0 = T[:len(p), :len(q)]
 
-        if cpt % 10 == 0:
-            err = np.linalg.norm(G0 - Gprev)
+			if cpt % 10 == 0:
+				err = np.linalg.norm(T0 - Gprev)
 
-            if verbose:
-                if cpt % 200 == 0:
-                    print('{:5s}|{:12s}'.format(
-                        'Epoch.', 'Loss') + '\n' + '-' * 19)
-                print('{:5d}|{:8e}|'.format(cpt, err))
+				if self.verbose:
+					if cpt % 200 == 0:
+						print('{:5s}|{:12s}'.format(
+							'Epoch.', 'Loss') + '\n' + '-' * 19)
+					print('{:5d}|{:8e}|'.format(cpt, err))
 
-        cpt += 1
-    
-    return Gc
+			cpt += 1
+	
+		return T
 
-def run_Pamona(data, n_shared=None, M=None, n_neighbors=10, epsilon=0.001, Lambda=1, virtual_cells=1, \
-    output_dim=30, max_iter=1000, tol=1e-9, manual_seed=666, mode="distance", metric="minkowski", verbose=True):
+	def project_func(self, data):
 
-    print("Pamona start!")
-    time1 = time.time()
+		n_datasets = len(data)
+		H0 = []
+		L = []
+		for i in range(n_datasets-1):
+			self.Gc[i] = self.Gc[i]*np.shape(data[i])[0]
 
-    init_random_seed(666)
+		for i in range(n_datasets):    
+			graph_data = kneighbors_graph(data[i], self.n_neighbors, mode="distance")
+			graph_data = graph_data + graph_data.T.multiply(graph_data.T > graph_data) - \
+				graph_data.multiply(graph_data.T > graph_data)
+			W = np.array(graph_data.todense())
+			index_pos = np.where(W>0)
+			W[index_pos] = 1/W[index_pos] 
+			D = np.diag(np.dot(W, np.ones(np.shape(W)[1])))
+			L.append(D - W)
 
-    dist = []
-    sampleNo = []
-    Max = []
-    Min = []
-    p = []
-    q = []
-    Gc = []
-    n_datasets = len(data)
+		Sigma_x = []
+		Sigma_y = []
+		for i in range(n_datasets-1):
+			Sigma_y.append(np.diag(np.dot(np.transpose(np.ones(np.shape(self.Gc[i])[0])), self.Gc[i])))
+			Sigma_x.append(np.diag(np.dot(self.Gc[i], np.ones(np.shape(self.Gc[i])[1]))))
 
-    for i in range(n_datasets):
-        sampleNo.append(np.shape(data[i])[0])
-        dist.append(Pamona_geodesic_distances(data[i], n_neighbors, mode=mode, metric=metric))
+		S_xy = self.Gc[0]
+		S_xx = L[0] + self.Lambda*Sigma_x[0]
+		S_yy = L[-1] + self.Lambda*Sigma_y[0]
+		for i in range(1, n_datasets-1):
+			S_xy = np.vstack((S_xy, self.Gc[i]))
+			S_xx = block_diag(S_xx, L[i] + self.Lambda*Sigma_x[i])
+			S_yy = S_yy + self.Lambda*Sigma_y[i]
 
-    for i in range(n_datasets-1):
-        Max.append(np.maximum(sampleNo[i], sampleNo[-1])) 
-        Min.append(np.minimum(sampleNo[i], sampleNo[-1]))
+		v, Q = la.eig(S_xx)
+		v = v + 1e-12   
+		V = np.diag(v**(-0.5))
+		H_x = np.dot(Q, np.dot(V, np.transpose(Q)))
 
-    if n_shared is None:
-    	n_shared = Min
+		v, Q = la.eig(S_yy)
+		v = v + 1e-12      
+		V = np.diag(v**(-0.5))
+		H_y = np.dot(Q, np.dot(V, np.transpose(Q)))
 
-    for i in range(n_datasets-1):
-        if n_shared[i] > Min[i]:
-            n_shared[i] = Min[i]
-        p.append(ot.unif(Max[i])[0:len(data[i])])
-        q.append(ot.unif(Max[i])[0:len(data[-1])])
+		H = np.dot(H_x, np.dot(S_xy, H_y))
+		U, sigma, V = la.svd(H)
 
-    T = []
+		num = [0]
+		for i in range(n_datasets-1):
+			num.append(num[i]+len(data[i]))
 
-    for i in range(n_datasets-1):
-        if M is not None:
-            Gc_tmp = entropic_gromov_wasserstein(dist[i], dist[-1], p[i], q[i], n_shared[i]/Max[i]-1e-15, M[i], \
-                epsilon=epsilon, tol=tol, max_iter=max_iter, virtual_cells=virtual_cells, verbose=verbose)
-        else:
-           Gc_tmp = entropic_gromov_wasserstein(dist[i], dist[-1], p[i], q[i], n_shared[i]/Max[i]-1e-15, \
-            epsilon=epsilon, tol=tol, max_iter=max_iter, virtual_cells=virtual_cells, verbose=verbose)
-        T.append(Gc_tmp) 
-        Gc.append(Gc_tmp[:len(p[i]), :len(q[i])])
+		U, V = U[:,:self.output_dim], np.transpose(V)[:,:self.output_dim]
 
-    integrated_data = project_func(data, dist, Gc, n_neighbors, Lambda=Lambda, dim=output_dim)
+		fx = np.dot(H_x, U)
+		fy = np.dot(H_y, V)
 
-    time2 = time.time()
-    print("Pamona Done! takes {:f}".format(time2-time1), 'seconds')
+		integrated_data = []
+		for i in range(n_datasets-1):
+			integrated_data.append(fx[num[i]:num[i+1]])
 
-    return integrated_data, T
+		integrated_data.append(fy)
 
-def Visualize(data, integrated_data, datatype=None, mode='PCA'):
-	if datatype == None:
-		visualize(data, integrated_data, mode=mode)
-	else:
-		visualize(data, integrated_data, datatype, mode=mode)
+		return integrated_data
 
-def label_transfer_accuracy(dataset1, dataset2, datatype1, datatype2):
-	label_transfer_acc = test_transfer_accuracy(dataset1,dataset2,datatype1,datatype2)
-	print("label transfer accuracy:")
-	print(label_transfer_acc)
+	def Visualize(self, data, integrated_data, datatype=None, mode='PCA'):
+		if datatype == None:
+			visualize(data, integrated_data, mode=mode)
+		else:
+			visualize(data, integrated_data, datatype, mode=mode)
 
-def alignment_score(data1_shared, data2_shared, data1_specific=None, data2_specific=None):
-	alignment_sco = test_alignment_score(data1_shared, data2_shared, data1_specific=data1_specific, data2_specific=data2_specific)
-	print("alignment score:")
-	print(alignment_sco)
+	def test_LabelTA(self, data1, data2, type1, type2):
+		label_transfer_acc = test_transfer_accuracy(data1,data2,type1,type2)
+		print("label transfer accuracy:")
+		print(label_transfer_acc)
 
-### example
-# data1 = np.loadtxt("./MMD/s1_mapped1.txt")
-# data2 = np.loadtxt("./MMD/s1_mapped2.txt")
-# type1 = np.loadtxt("./MMD/s1_type1.txt")
-# type2 = np.loadtxt("./MMD/s1_type2.txt")
-# index1 = np.argwhere(type1==0).reshape(1,-1).flatten()    
-# index2 = np.argwhere(type1==2).reshape(1,-1).flatten()
-# index3 = np.argwhere(type1==1).reshape(1,-1).flatten()
-# index = np.hstack((index1, index2))
-# print(len(index))
-# index = np.hstack((index, index3))
-# type1 = type1[index]
-# data1 = data1[index]
-# index1 = np.argwhere(type2==0).reshape(1,-1).flatten()
-# index2 = np.argwhere(type2==2).reshape(1,-1).flatten()
-# index = np.hstack((index1, index2))
-# type2 = type2[index]
-# data2 = data2[index]
-# type1 = type1.astype(np.int)
-# type2 = type2.astype(np.int)
-# data = [data1,data2]
-# datatype = [type1,type2]
-# integrated_data, T = run_Pamona(data, epsilon=0.001, n_neighbors=10, Lambda=1, output_dim=30)
-# label_transfer_accuracy(integrated_data[0][0:241],integrated_data[1],type1[0:241],type2)
-# alignment_score(integrated_data[0][0:241], integrated_data[1], data1_specific=integrated_data[0][241:300])
-# Visualize([data1,data2], integrated_data, datatype=datatype, mode='UMAP')
+	def alignment_score(self, data1_shared, data2_shared, data1_specific=None, data2_specific=None):
+		alignment_sco = test_alignment_score(data1_shared, data2_shared, data1_specific=data1_specific, data2_specific=data2_specific)
+		print("alignment score:")
+		print(alignment_sco)
+
+
+if __name__ == '__main__':
+	### example
+	data1 = np.loadtxt("./Simulation1/Simualtion1_partial1.txt")
+	data2 = np.loadtxt("./Simulation1/Simulation1_partial2.txt")
+	type1 = np.loadtxt("./Simulation1/type1_partial.txt")
+	type2 = np.loadtxt("./Simulation1/type2_partial.txt")
+
+	type1 = type1.astype(np.int)
+	type2 = type2.astype(np.int)
+	data = [data1,data2]
+	datatype = [type1,type2]
+
+	Pa = Pamona(epsilon=0.001, n_neighbors=10, Lambda=1, output_dim=30)
+	integrated_data, T = Pa.run_Pamona(data)
+	Pa.test_LabelTA(integrated_data[0][0:241],integrated_data[1],type1[0:241],type2)
+	Pa.alignment_score(integrated_data[0][0:241], integrated_data[1], data1_specific=integrated_data[0][241:300])
+	Pa.Visualize([data1,data2], integrated_data, datatype=datatype, mode='UMAP')
