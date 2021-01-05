@@ -78,8 +78,8 @@ class Pamona(object):
 	>>> import numpy as np
 	>>> data1 = np.loadtxt("./scGEM/expression.txt")
 	>>> data2 = np.loadtxt("./scGEM/methylation.txt")
-	>>> type1 = np.loadtxt("./simu1/expression_type.txt")
-	>>> type2 = np.loadtxt("./simu1/methylation_type.txt")
+	>>> type1 = np.loadtxt("./scGEM/expression_type.txt")
+	>>> type2 = np.loadtxt("./scGEM/methylation_type.txt")
 	>>> type1 = type1.astype(np.int)
 	>>> type2 = type2.astype(np.int)
 	>>> uc = Pamona.Pamona()
