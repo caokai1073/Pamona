@@ -38,13 +38,15 @@ Each row should contain the measured values for a single cell, and each column s
 >>> integrated_data, T = Pa.run_Pamona(data)
 >>> Pa.test_LabelTA(integrated_data[0],integrated_data[-1],type1,type2)
 >>> Pa.alignment_score(integrated_data[0], integrated_data[-1][0:142], data2_specific=integrated_data[-1][142:177])
->>> Pa.Visualize([data1,data2], integrated_data, mode='PCA')  # without datatype, mode: ["PCA", "TSNE", "UMAP"], default as "PCA".
+>>> Pa.Visualize([data1,data2], integrated_data, mode='PCA')  # without datatype
 >>> Pa.Visualize([data1,data2], integrated_data, [type1,type2], mode='PCA')  # with datatype 
+>>> # mode: ["PCA", "TSNE", "UMAP"], default as "PCA".
 ```
 ## Example of design disagreement matrix of prior information
 If cell types are available, users can incorporate the information as follows
 ```python
->>> gamma = 0.5 # gamma is a parameter. A larger value gives more importance to the matching of prior information.
+>>> gamma = 0.5 # gamma is a parameter, ranges from 0 to 1. 
+>>> # A larger gamma gives more importance to the matching of prior information.
 >>> DM = np.ones((len(data1), len(data2)))
 >>> for i in range(len(data1)):
 >>>    for j in range(len(data2)):
