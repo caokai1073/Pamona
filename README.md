@@ -50,7 +50,8 @@ If cell types are available, users can incorporate the information as follows
 >>>    for j in range(len(data2)):
 >>>        if type1[i] == type2[j]:
 >>>            DM[i][j] = gamma
->>> Pa = Pamona.Pamona(M=DM)
+>>> ...
+>>> Pa = Pamona.Pamona(..., M=DM, ...)
 ```
 
 ## Parameters of ```class Pamona```
