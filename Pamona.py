@@ -25,7 +25,7 @@ class Pamona(object):
 	Preprint at https://doi.org/10.1101/2020.11.03.366146
 
 	=============================
-		parameters:
+		Parameters
 	=============================
 	dataset: list of numpy array, [dataset1, dataset2, ...] (n_datasets, n_samples, n_features). 
 	--list of datasets to be integrated, in the form of a numpy array.
@@ -49,7 +49,7 @@ class Pamona(object):
 	--disagreement matrix of prior information.
 	
 	=============================
-		Functions:
+		Functions
 	=============================
 	run_Pamona(dataset) 				
 	--find correspondence between datasets, align multi-omics data in a common embedded space
@@ -70,7 +70,7 @@ class Pamona(object):
 	test alignment score
 
 	=============================
-		Examples:
+		Examples
 	=============================
 	input: numpy arrays with rows corresponding to samples and columns corresponding to features
 	output: integrated numpy arrays
