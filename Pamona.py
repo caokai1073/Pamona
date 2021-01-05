@@ -290,20 +290,67 @@ class Pamona(object):
 		print(alignment_sco)
 
 
-if __name__ == '__main__':
-	### example
-	data1 = np.loadtxt("./Simulation1/Simualtion1_partial1.txt")
-	data2 = np.loadtxt("./Simulation1/Simulation1_partial2.txt")
-	type1 = np.loadtxt("./Simulation1/type1_partial.txt")
-	type2 = np.loadtxt("./Simulation1/type2_partial.txt")
+# if __name__ == '__main__':
+# 	### example
+# 	data1 = np.loadtxt("./PBMC/ATAC_scaledata.txt")
+# 	data2 = np.loadtxt("./PBMC/RNA_scaledata.txt")
+# 	type1 = np.loadtxt("./PBMC/ATAC_type.txt")
+# 	type2 = np.loadtxt("./PBMC/RNA_type.txt")
+# 	data1=zscore_standardize(np.asarray(data1))
+# 	data2=zscore_standardize(np.asarray(data2))
 
-	type1 = type1.astype(np.int)
-	type2 = type2.astype(np.int)
-	data = [data1,data2]
-	datatype = [type1,type2]
+# 	type1 = type1.astype(np.int)
+# 	type2 = type2.astype(np.int)
+# 	data = [data1,data2]
+# 	datatype = [type1,type2]
 
-	Pa = Pamona(epsilon=0.001, n_neighbors=10, Lambda=1, output_dim=30)
-	integrated_data, T = Pa.run_Pamona(data)
-	Pa.test_LabelTA(integrated_data[0][0:241],integrated_data[1],type1[0:241],type2)
-	Pa.alignment_score(integrated_data[0][0:241], integrated_data[1], data1_specific=integrated_data[0][241:300])
-	Pa.Visualize([data1,data2], integrated_data, datatype=datatype, mode='UMAP')
+# 	M = []
+# 	n_datasets = len(data)
+# 	for k in range(n_datasets-1):
+# 	    M.append(np.ones((len(data[k]), len(data[-1]))))
+# 	    for i in range(len(data[k])):
+# 	        for j in range(len(data[-1])):
+# 	            if datatype[k][i] == datatype[-1][j]:
+# 	                M[k][i][j] = 0.5
+
+# 	Pa = Pamona(n_shared=[1649], M=M, n_neighbors=30)
+# 	integrated_data, T = Pa.run_Pamona(data)
+
+# 	####PBMC
+# 	index1 = np.argwhere(type1==0).reshape(1,-1).flatten()    
+# 	index2 = np.argwhere(type1==1).reshape(1,-1).flatten()
+# 	index3 = np.argwhere(type1==2).reshape(1,-1).flatten()
+# 	index4 = np.argwhere(type1==3).reshape(1,-1).flatten()
+# 	shared1 = np.hstack((index1, index2))
+# 	shared1 = np.hstack((shared1, index3))
+# 	shared1 = np.hstack((shared1, index4))
+# 	print(np.shape(shared1))
+
+# 	index1 = np.argwhere(type1==4).reshape(1,-1).flatten()    
+# 	index2 = np.argwhere(type1==5).reshape(1,-1).flatten()
+# 	specific1 = np.hstack((index1, index2))
+# 	print(np.shape(specific1))
+
+# 	index1 = np.argwhere(type2==0).reshape(1,-1).flatten()    
+# 	index2 = np.argwhere(type2==1).reshape(1,-1).flatten()
+# 	index3 = np.argwhere(type2==2).reshape(1,-1).flatten()
+# 	index4 = np.argwhere(type2==3).reshape(1,-1).flatten()
+# 	shared2 = np.hstack((index1, index2))
+# 	shared2 = np.hstack((shared2, index3))
+# 	shared2 = np.hstack((shared2, index4))
+# 	print(np.shape(shared2))
+
+# 	index1 = np.argwhere(type2==6).reshape(1,-1).flatten()    
+# 	index2 = np.argwhere(type2==7).reshape(1,-1).flatten()
+# 	index3 = np.argwhere(type2==8).reshape(1,-1).flatten()
+# 	index4 = np.argwhere(type2==9).reshape(1,-1).flatten()
+# 	specific2 = np.hstack((index1, index2))
+# 	specific2 = np.hstack((specific2, index3))
+# 	specific2 = np.hstack((specific2, index4))
+# 	print(np.shape(specific2))
+
+# 	Pa.alignment_score(integrated_data[0][shared1], integrated_data[-1][shared2], \
+# 	    data1_specific=integrated_data[0][specific1] , data2_specific=integrated_data[-1][specific2])
+# 	Pa.test_LabelTA(integrated_data[0][shared1],integrated_data[-1],type1[shared1],type2)
+
+# 	Pa.Visualize([data1,data2], integrated_data, datatype=datatype, mode='UMAP')
