@@ -29,9 +29,9 @@ Each row should contain the measured values for a single cell, and each column s
 >>> from pamona import Pamona
 >>> import numpy as np
 >>> data1 = np.loadtxt("./scGEM/methylation_partial.txt")
->>>	data2 = np.loadtxt("./scGEM/expression_partial.txt")
->>>	type1 = np.loadtxt("./scGEM/methylation_type_partial.txt")
->>>	type2 = np.loadtxt("./scGEM/expression_type_partial.txt")
+>>> data2 = np.loadtxt("./scGEM/expression_partial.txt")
+>>> type1 = np.loadtxt("./scGEM/methylation_type_partial.txt")
+>>> type2 = np.loadtxt("./scGEM/expression_type_partial.txt")
 >>> type1 = type1.astype(np.int)
 >>> type2 = type2.astype(np.int)
 >>> Pa = Pamona.Pamona(n_shared=[138], epsilon=0.001, n_neighbors=10, Lambda=10, output_dim=5)
