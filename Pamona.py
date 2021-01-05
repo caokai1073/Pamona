@@ -82,10 +82,10 @@ class Pamona(object):
 	>>> type2 = np.loadtxt("./scGEM/methylation_type.txt")
 	>>> type1 = type1.astype(np.int)
 	>>> type2 = type2.astype(np.int)
-	>>> uc = Pamona.Pamona()
-	>>> integrated_data = uc.fit_transform(dataset=[data1,data2])
-	>>> uc.test_labelTA(integrated_data[0], integrated_data[1], type1, type2)
-	>>> uc.Visualize([data1,data2], integrated_data, [type1,type2], mode='PCA')
+	>>> Pa = Pamona.Pamona()
+	>>> integrated_data = Pa.fit_transform(dataset=[data1,data2])
+	>>> Pa.test_labelTA(integrated_data[0], integrated_data[1], type1, type2)
+	>>> Pa.Visualize([data1,data2], integrated_data, [type1,type2], mode='PCA')
 	===============================
 	"""
 
