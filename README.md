@@ -42,7 +42,7 @@ Each row should contain the measured values for a single cell, and each column s
 >>> Pa.Visualize([data1,data2], integrated_data, [type1,type2], mode='UMAP')  # with datatype 
 >>> # mode: ["PCA", "TSNE", "UMAP"], default as "PCA".
 ```
-## Example of design disagreement matrix of prior information
+## Example of disagreement matrix of prior information
 If cell types are available, users can incorporate the information as follows
 ```python
 >>> gamma = 0.5 # gamma is a parameter, ranges from 0 to 1. 
