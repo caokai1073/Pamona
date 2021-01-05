@@ -37,7 +37,8 @@ Each row should contain the measured values for a single cell, and each column s
 >>> uc = Pamona.Pamona()
 >>> integrated_data = uc.fit_transform(dataset=[data1,data2])
 >>> uc.test_labelTA(integrated_data[0], integrated_data[1], type1, type2)
->>> uc.Visualize([data1,data2], integrated_data, [type1,type2], mode='PCA')
+>>> uc.Visualize([data1,data2], integrated_data, mode='PCA')  # without datatype, mode: ["PCA", "TSNE", "UMAP"], default as "PCA".
+>>> uc.Visualize([data1,data2], integrated_data, [type1,type2], mode='PCA')  # with datatype 
 ```
 
 ## Parameters of ```run_Pamona```
@@ -72,15 +73,5 @@ The other parameters include:
 > + ```manual_seed```: *int*, random seed, default as 666.
 > + ```mode```: *{‘connectivity’, ‘distance’}*, type of returned matrix: ‘connectivity’ will return the connectivity matrix with ones and zeros, and ‘distance’ will return the distances between neighbors according to the given metric. has to be either one of 'connectivity' or 'distance', default as 'distance'.
 > + ```metric```: *str*, the distance metric used to calculate the k-Neighbors for each sample point, default as ’minkowski’.
-
-## Visualization
-```python
-type_0 = type_0.astype(np.int)
-...
-type_N = type_N.astype(np.int)
-Pamona.Visualize([data_0, ..., data_N], integrated_data, mode='PCA') # without datatype
-Pamona.Visualize([data_0, ..., data_N], integrated_data, [type_0,...,type_N], mode='PCA) # with datatype
-# mode: ["PCA", "TSNE", "UMAP"], default as "PCA"
-```
 
 ### Contact via caokai@amss.ac.cn
