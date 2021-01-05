@@ -28,17 +28,18 @@ Each row should contain the measured values for a single cell, and each column s
 ```python
 >>> from pamona import Pamona
 >>> import numpy as np
->>> data1 = np.loadtxt("./scGEM/expression.txt")
->>> data2 = np.loadtxt("./scGEM/methylation.txt")
->>> type1 = np.loadtxt("./scGEM/expression_type.txt")
->>> type2 = np.loadtxt("./scGEM/methylation_type.txt")
+>>> data1 = np.loadtxt("./scGEM/methylation_partial.txt")
+>>>	data2 = np.loadtxt("./scGEM/expression_partial.txt")
+>>>	type1 = np.loadtxt("./scGEM/methylation_type_partial.txt")
+>>>	type2 = np.loadtxt("./scGEM/expression_type_partial.txt")
 >>> type1 = type1.astype(np.int)
 >>> type2 = type2.astype(np.int)
->>> uc = Pamona.Pamona()
->>> integrated_data = uc.fit_transform(dataset=[data1,data2])
->>> uc.test_labelTA(integrated_data[0], integrated_data[1], type1, type2)
->>> uc.Visualize([data1,data2], integrated_data, mode='PCA')  # without datatype, mode: ["PCA", "TSNE", "UMAP"], default as "PCA".
->>> uc.Visualize([data1,data2], integrated_data, [type1,type2], mode='PCA')  # with datatype 
+>>> Pa = Pamona.Pamona(n_shared=[138], epsilon=0.001, n_neighbors=10, Lambda=10, output_dim=5)
+>>> integrated_data, T = Pa.run_Pamona(data)
+>>> Pa.test_LabelTA(integrated_data[0],integrated_data[-1],type1,type2)
+>>> Pa.alignment_score(integrated_data[0], integrated_data[-1][0:142], data2_specific=integrated_data[-1][142:177])
+>>> Pa.Visualize([data1,data2], integrated_data, mode='PCA')  # without datatype, mode: ["PCA", "TSNE", "UMAP"], default as "PCA".
+>>> Pa.Visualize([data1,data2], integrated_data, [type1,type2], mode='PCA')  # with datatype 
 ```
 
 ## Parameters of ```class Pamona```
