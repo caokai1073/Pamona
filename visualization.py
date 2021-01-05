@@ -42,7 +42,6 @@ def visualize(data, data_integrated, datatype=None, mode='PCA'):
                 plt.xlabel('UMAP-1')
                 plt.ylabel('UMAP-2')
             # plt.title(data_map[i])
-            plt.legend()
     else:
         for i in range(dataset_num):
             plt.subplot(1,dataset_num,i+1)
@@ -58,7 +57,6 @@ def visualize(data, data_integrated, datatype=None, mode='PCA'):
                 plt.xlabel('UMAP-1')
                 plt.ylabel('UMAP-2')
             plt.title(dataset_xyz[i])
-            plt.legend()
 
     plt.tight_layout()
 
@@ -102,7 +100,6 @@ def visualize(data, data_integrated, datatype=None, mode='PCA'):
         else:
             plt.xlabel('UMAP-1')
             plt.ylabel('UMAP-2')
-        plt.legend()
 
         plt.subplot(1,2,2)
         for i in range(dataset_num):  
@@ -120,7 +117,6 @@ def visualize(data, data_integrated, datatype=None, mode='PCA'):
         else:
             plt.xlabel('UMAP-1')
             plt.ylabel('UMAP-2')
-        plt.legend()
 
     else:
 
@@ -136,7 +132,6 @@ def visualize(data, data_integrated, datatype=None, mode='PCA'):
         else:
             plt.xlabel('UMAP-1')
             plt.ylabel('UMAP-2')
-        plt.legend()
 
     plt.tight_layout()
     plt.show()
