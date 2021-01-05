@@ -28,16 +28,18 @@ Each row should contain the measured values for a single cell, and each column s
 ```data_0.txt, ... , data_N.txt``` to be integrated, use
 
 ```python
-from pamona import Pamona
-import numpy as np
-data1 = np.loadtxt("data1.txt")
-data2 = np.loadtxt("data2.txt")
-data3 = np.loadtxt("data3.txt")
-integrated_data, T = Pamona.run_Pamona([data1,data2,data3], n_shared=[n1,n2])
-# if prior disagreement matrix M1,M2 available
-# integrated_data, T = Pamona.run_Pamona([data1,data2,data3], n_shared=[n1,n2], M=[M1,M2])
-aligned_data1 = integrated_data[0]
-aligned_data2 = integrated_data[1]
+>>> from pamona import Pamona
+>>> import numpy as np
+>>> data1 = np.loadtxt("./scGEM/expression.txt")
+>>> data2 = np.loadtxt("./scGEM/methylation.txt")
+>>> type1 = np.loadtxt("./simu1/expression_type.txt")
+>>> type2 = np.loadtxt("./simu1/methylation_type.txt")
+>>> type1 = type1.astype(np.int)
+>>> type2 = type2.astype(np.int)
+>>> uc = Pamona.Pamona()
+>>> integrated_data = uc.fit_transform(dataset=[data1,data2])
+>>> uc.test_labelTA(integrated_data[0], integrated_data[1], type1, type2)
+>>> uc.Visualize([data1,data2], integrated_data, [type1,type2], mode='PCA')
 ```
 
 ## Parameters of ```run_Pamona```
