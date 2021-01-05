@@ -25,8 +25,6 @@ pip3 install pamona
 
 ## Integrate data
 Each row should contain the measured values for a single cell, and each column should contain the values of a feature across cells. 
-```data_0.txt, ... , data_N.txt``` to be integrated, use
-
 ```python
 >>> from pamona import Pamona
 >>> import numpy as np
