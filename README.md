@@ -41,7 +41,7 @@ Each row should contain the measured values for a single cell, and each column s
 >>> uc.Visualize([data1,data2], integrated_data, [type1,type2], mode='PCA')  # with datatype 
 ```
 
-## Parameters of ```run_Pamona```
+## Parameters of ```class Pamona```
 
 The list of parameters is given below:
 + **data**:  *list of numpy array, [dataset1, dataset2, ...] (n_datasets, n_samples, n_features).*
