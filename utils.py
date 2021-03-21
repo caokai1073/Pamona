@@ -90,6 +90,7 @@ def get_spatial_distance_matrix(data, metric="euclidean"):
 
 def unit_normalize(data, norm="l2", bySample=True):
     """
+    From SCOT code: https://github.com/rsinghlab/SCOT
     Default norm used is l2-norm. Other options: "l1", and "max"
     If bySample==True, then we independently normalize each sample. If bySample==False, then we independently normalize each feature
     """
@@ -104,6 +105,9 @@ def unit_normalize(data, norm="l2", bySample=True):
     
 
 def zscore_standardize(data):
+    """
+    From SCOT code: https://github.com/rsinghlab/SCOT
+    """
     scaler=StandardScaler()
     scaledData=scaler.fit_transform(data)
     return scaledData
